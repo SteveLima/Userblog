@@ -1,0 +1,17 @@
+{%extends "base.html"%}
+{%block content%}
+
+{% for Blog in Blogs %}
+	<div>
+		<p>Are you sure you want to delete {{Blog.title}}?</p>
+	</div>
+		{% endfor %}
+	<form method="post">
+	<div class="col-md-2">
+		<input class="box1" type="submit" name="" value="Delete">
+	</div>
+	</form>
+	<div class="col-md-2">
+		<a href="/mainpage"> <button class="box1"> Cancel </button> </a>
+	</div>
+{%endblock%}

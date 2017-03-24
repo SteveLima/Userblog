@@ -1,0 +1,26 @@
+{%extends "base.html"%}
+{%block content%}
+
+ 			{% for Blog in Blogs %}
+ 			<div class="row line">
+	 			<div class=" col-md-4 title "><a href="/blog/{{Blog.key().id()}}">{{Blog.title}}</a> </div>
+	 			<div class="date col-md-5">Date created:{{Blog.created}}</div>
+	 			<div class=" col-md-1"> <a href="/delete/{{Blog.key().id()}}">Delete</a> </div>
+	 			<div class=" col-md-1"> <a href="/edit/{{Blog.key().id()}}">Edit</a> </div>
+	 			<div class="col-md-1">Likes:{{Blog.likes}} </div>
+
+
+ 			</div>
+ 			<div class="row">
+	 			<pre class="content col-md-12">{{Blog.content}}</pre>
+	 				
+		 			<div class="col-md-2">
+		 				<a href="/like/{{Blog.key().id()}}"><button class="col-md-2 box1">Like</button></a> 
+		 			</div>
+ 			</div>
+ 			
+ 			{% endfor %}
+
+ 		</div>
+
+{%endblock%}

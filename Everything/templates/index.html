@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+
+
+	</head>
+	<body class="background-image">
+		<div class="container ">
+			<div class="stuff row">
+				<div class="col-md-9 signup ">Sign-up</div>
+				<div class="bloggert col-md-3 ">Crafty Blogs</div>
+			</div>
+			
+			<form method="post">
+				<div class="row">
+					<div class="col-md-12">
+						<h4 class="">Username: </h4>
+					</div>
+					<div class="col-md-3">
+						<input class="box1" type="text" name="username" value="{{username}}">
+						{{error_username}}
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-12">
+						<h4 class="">Password: </h4>
+					</div>
+					<div class="col-md-3">
+						<input class="box1" type="password" name="password" value="">
+						{{error_password}}
+					</div>
+				</div>			
+
+				<div class="row">
+					<div class="col-md-12">
+						<h4 class="">Verify password: </h4>
+					</div>
+					<div class="col-md-3">
+						<input class="box1" type="password" name="verify" value="">
+						{{error_verify}}
+					</div>
+				</div>		
+
+				<div class="row">
+					<div class="col-md-12">
+						<h4 class="">Email: </h4>
+					</div>
+					<div class="col-md-3">
+						<input class="box1" type="text" name="email" value="{{email}}">
+						{{error_email}}
+					</div>
+				</div>					
+				
+				<div class="row padding-top">
+					<div class="col-md-2 ">
+						<input type="submit">
+					</div>
+					<div class="col-md-3 ">
+						<a  class="link" href="/login">Already a User?</a>
+					</div>
+				</div>
+			</form>
+		</div>
+
+
+	</body>
+</html>

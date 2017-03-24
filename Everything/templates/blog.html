@@ -1,0 +1,73 @@
+{%extends "base.html"%}
+{%block content%}
+
+	<div class="container">
+		<div>
+			<a class="link" href="/mainpage">Home</a>
+		</div>
+
+		{% for Blog in Blogs %}
+			<div class="line">
+				<div class="row"> 
+					<div class="title col-md-5">
+						{{Blog.title}}
+					</div>
+					<div class="date col-md-3">
+						{{Blog.created}}
+					</div>
+					<div class="date col-md-3">
+						{{Blog.user_name}}
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<pre class="content col-md-12">{{Blog.content}}</pre>
+			</div>
+		{% endfor %}
+
+		<h2>Comments</h2>
+
+		{% for Comment in Comments %}
+		<div>
+			<div class="line2">
+				<div class="row"> 
+					<div class="title col-md-5">
+						{{Comment.userid}}
+					</div>
+					<div class="date col-md-3">
+						{{Comment.created}}
+					</div>
+					<div class="col-md-2">
+					<a href="/edit_comment/{{Comment.key().id()}}">Edit</a>
+					</div>
+					<div class="col-md-2">
+					<a href="/delete_comment/{{Comment.key().id()}}">Delete</a>
+					</div>
+
+				</div>
+			</div>
+			<div class="row">
+				<pre class=" col-md-12">{{Comment.content}}</pre>
+			</div>
+
+		</div>
+		{% endfor %}
+
+		<form method="post">
+			
+		<div class="row">
+						<div class="heading ">Comment</div>
+					</div>
+					<div class="row">
+						<div class=" col-md-12">
+							<textarea class="box1 box2 " name="content"></textarea>
+						</div>
+						<div class="row">
+							<div class=" col-md-4">
+								<input class="box1" type="submit" name="">
+							</div>
+						</div>
+					</div>
+		</form>
+	</div>
+{%endblock%}

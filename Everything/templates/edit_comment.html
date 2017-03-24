@@ -1,0 +1,27 @@
+{%extends "base.html"%}
+{%block content%}
+
+	
+{%for Comment in Comments%}
+	
+	
+<div class="row">
+		<form method="post">
+				<div class="heading ">Edit your comment below</div>
+					</div>
+					<div class="row">
+						<div class=" col-md-11">
+							<textarea class="box1 box2 " name="content" >{{Comment.content}}</textarea>
+						</div>
+						<div class="row">
+							<div class=" col-md-4">
+								<input class="box1" type="submit" name="">
+							</div>
+						</div>
+					</div>
+		</form>
+	
+
+{%endfor%}
+</div>
+{%endblock%}

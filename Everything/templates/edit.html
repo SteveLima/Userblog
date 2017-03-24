@@ -1,0 +1,59 @@
+{%extends "base.html"%}
+{%block content%}
+
+	<div class="container">
+		<div>
+			<a class="link" href="/mainpage">Home</a>
+		</div>
+		{% for Blog in Blogs %}
+			<div class="line">
+				<div class="row"> 
+					<div class="title col-md-5">
+						{{Blog.title}}
+					</div>
+					<div class="date col-md-3">
+						{{Blog.created}}
+					</div>
+					<div class="date col-md-3">
+						{{Blog.author}}
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<pre class="content col-md-12">
+					{{Blog.content}}
+				</pre>
+			</div>
+		<div>
+			<form method="post">
+					<div class="row">
+						<h2>Edit post</h2>
+						
+					</div>
+					<div class="row">
+							<div class="heading ">
+								<div class="">Title</div>
+							</div>
+					</div>
+					<div class="row">
+							<div class=" col-md-12">
+							<input class="box1 " type="text" name="title" value="{{Blog.title}}">
+							</div>
+					</div>
+					<div class="row">
+						<div class="heading ">Content</div>
+					</div>
+					<div class="row">
+						<div class=" col-md-12">
+							<textarea class="box1 box2 " name="content">{{Blog.content}}</textarea>
+						</div>
+						<div class="row">
+							<div class=" col-md-4">
+								<input class="box1" type="submit" name="">
+							</div>
+						</div>
+					</div>	
+		</div>
+	</div>
+		{% endfor %}
+{%endblock%}
