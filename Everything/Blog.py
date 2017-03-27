@@ -264,18 +264,25 @@ class Newpost(Handler):
 			self.redirect('/login')
 
 	def post (self):
-		title = self.request.get('title')
-		content = self.request.get('content')
-		author = check_secure_val(self.request.cookies.get('user_id'))
-		user_name = self.user.name
-		likes = 0 
-
-		if title and content:
-			Blog=blog(title =title, content = content, author = author, user_name = user_name, likes = likes)
-			key= Blog.put()
-			self.redirect("/blog/%d" %key.id())
+		if self.user:
+			title = self.request.get('title')
+			content = self.request.get('content')
+			author = check_secure_val(self.request.cookies.get('user_id'))
+			user_name = self.user.name
+			likes = 0 
+			u = User.all().filter('name =',user_name).get()
+			print(u)
+			if u:
+				if title and content:
+					Blog=blog(title =title, content = content, author = author, user_name = user_name, likes = likes)
+					key= Blog.put()
+					self.redirect("/blog/%d" %key.id())
+				else:
+					self.render("newpost.html")
+			else:
+				self.redirect('/login')
 		else:
-			self.render("newpost.html")
+			self.redirect('/login')
 
 class blog_single(Handler):
 	def get(self, blog_id):
@@ -294,39 +301,49 @@ class blog_single(Handler):
 		# t = check_secure_val(self.request.cookies.get('user_id'))
 		content = self.request.get('content')
 		un = self.user.name
-		
-		if content:
-			Comment = comment(content= content, blogid = s.key().id(), userid = un)
-			Comment.put()
-			self.redirect("/blog/%d" %s.key().id())
+		if s:
+			if content:
+				Comment = comment(content= content, blogid = s.key().id(), userid = un)
+				Comment.put()
+				self.redirect("/blog/%d" %s.key().id())
+			else:
+				self.redirect("/mainpage")
 		else:
 			self.redirect("/mainpage")
+
 
 class edit_comment(Handler):
 	def get(self,comment_id):
 		s= comment.get_by_id(int(comment_id))
 		t = check_secure_val(self.request.cookies.get('user_id'))
-		if s.userid == self.user.name:
-			self.render("edit_comment.html", Comments = [s])
+		if s :
+			if t:
+				if s.userid == self.user.name:
+					self.render("edit_comment.html", Comments = [s])
+				else:
+					self.redirect('/mainpage')
+			else:
+				self.redirect('/mainpage')
 		else:
 			self.redirect('/mainpage')
 
+
+
 	def post(self,comment_id):
 		s= comment.get_by_id(int(comment_id))
-		u = s.key().id()
-		t = self.user.name
-		y = s.blogid
-		print(comment_id)
-		print(u)
-		print(t)
-		print(s.userid)
-		if t == s.userid and u == int(comment_id):
-			content = self.request.get('content')
-			s.content = content
-			s.put()
-			self.redirect('/blog/%d'%y)
+		if s:
+			u = s.key().id()
+			t = self.user.name
+			y = s.blogid
+			if t == s.userid and u == int(comment_id):
+				content = self.request.get('content')
+				s.content = content
+				s.put()
+				self.redirect('/blog/%d'%y)
+			else:
+				self.redirect('/blog/%d'%y)
 		else:
-			self.redirect('/blog/%d'%y)
+			self.redirect('/mainpage')
 
 class delete_comment(Handler):
 	def get(self,comment_id):
