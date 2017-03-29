@@ -155,7 +155,6 @@ class Signup(Handler):
 	def get(self):
 		self.render("index.html")
 
-
 	def post(self):
 		have_error = False 
 		self.username =self.request.get('username')
@@ -311,7 +310,6 @@ class blog_single(Handler):
 		else:
 			self.redirect("/mainpage")
 
-
 class edit_comment(Handler):
 	def get(self,comment_id):
 		s= comment.get_by_id(int(comment_id))
@@ -326,8 +324,6 @@ class edit_comment(Handler):
 				self.redirect('/mainpage')
 		else:
 			self.redirect('/mainpage')
-
-
 
 	def post(self,comment_id):
 		s= comment.get_by_id(int(comment_id))
@@ -348,74 +344,87 @@ class edit_comment(Handler):
 class delete_comment(Handler):
 	def get(self,comment_id):
 		s= comment.get_by_id(int(comment_id))
-		t = check_secure_val(self.request.cookies.get('user_id'))
-		if s.userid == self.user.name:
-			self.render("delete_comment.html", Comments = [s])
-		else:
-			self.redirect('/mainpage')
+		if self.user and s:
+			t = check_secure_val(self.request.cookies.get('user_id'))
+			if s.userid == self.user.name:
+				self.render("delete_comment.html", Comments = [s])
+			else:
+				self.redirect('/mainpage')
 
 	def post(self,comment_id):
 		s= comment.get_by_id(int(comment_id))
-		u = s.blogid
-		s.delete()
-		self.redirect('/blog/%d'%u)
-
-
+		if self.user and s:
+			u = s.blogid
+			if s.userid == self.user.name:
+				s.delete()
+				self.redirect('/blog/%d'%u)
+			else:
+				self.redirect('/blog/%d'%u)
+		else:
+			self.redirect('/blog/%d'%u)
 
 class delete_post(Handler):
 	def get(self, blog_id):
-        	Blog = blog.get_by_id(int(blog_id))
-        	self.render("delete.html", Blogs = [Blog])
+		Blog = blog.get_by_id(int(blog_id))
+		cookie_author = check_secure_val(self.request.cookies.get('user_id'))
+
+		if self.user and Blog:
+			if Blog.author == cookie_author:
+				self.render("delete.html", Blogs = [Blog])
+
+			else:
+				self.redirect('/blog/%d'%blog_id)
+		else:
+			self.redirect('/blog/%d'%blog_id)
 
 	def post(self,blog_id):
 		cookie_author = check_secure_val(self.request.cookies.get('user_id'))
 		s= blog.get_by_id(int(blog_id))
+		if self.user and s:
+			if s.author == cookie_author:
+				s.delete()
+				self.redirect("/mainpage")
 
-		if s.author == cookie_author:
-			s.delete()
-			self.redirect("/mainpage")
-
+			else:
+				self.redirect("/mainpage")
 		else:
 			self.redirect("/mainpage")
 
 class edit_post(Handler):
 	def get(self, blog_id):
-        	Blog = blog.get_by_id(int(blog_id))
-        	self.render("edit.html", Blogs = [Blog])
+		cookie_author = check_secure_val(self.request.cookies.get('user_id'))
+		Blog = blog.get_by_id(int(blog_id))
+		if self.user and Blog:
+			if Blog.author == cookie_author:
+				self.render("edit.html", Blogs = [Blog])
+
+			else:
+				self.redirect('/mainpage')
+		else:
+			self.redirect('/mainpage')
 
 	def post(self,blog_id):
-		# self.author =self.request.get('author')
 		cookie_author = check_secure_val(self.request.cookies.get('user_id'))
 		s= blog.get_by_id(int(blog_id))
+		if self.user and s:
+			if s.author == cookie_author:
 
-		if s.author == cookie_author:
+				title = self.request.get('title')
+				content = self.request.get('content')
+				author = check_secure_val(self.request.cookies.get('user_id'))
+				
+				s= blog.get_by_id(int(blog_id))
+				s.title = title
+				s.content = content
+				s.author = author
+				s.put()
+				self.render("blog.html", Blogs = [s])
 
-			title = self.request.get('title')
-			content = self.request.get('content')
-			author = check_secure_val(self.request.cookies.get('user_id'))
-			
-			s= blog.get_by_id(int(blog_id))
-			s.title = title
-			s.content = content
-			s.author = author
-			s.put()
-			self.render("blog.html", Blogs = [s])
+			else:
+				self.redirect("/mainpage")
 
 		else:
-			self.redirect("/mainpage")
-
-#class to display the main page 
-# class Mainpage(Handler):
-# 	def get(self):
-# 		username = self.request.get('username')
-# 		if valid_username(username):
-# 			Blogs = db.GqlQuery("SELECT * FROM blog ""ORDER BY created DESC ")
-# 			self.render("mainpage.html",Blogs = Blogs ,  username = username)
-# 		else:
-# 			self.redirect('/signup')
-
-	
-
+			self.redirect('/mainpage')
 
 app = webapp2.WSGIApplication([ ('/newpost',Newpost),
 	('/blog/(\d+)', blog_single), 
